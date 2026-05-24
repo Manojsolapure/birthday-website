@@ -31,6 +31,7 @@ html,body{
     animation:floatUp linear infinite;
     opacity:0.8;
     z-index:0;
+    pointer-events:none;
 }
 
 @keyframes floatUp{
@@ -275,6 +276,9 @@ html,body{
     cursor:grab;
 
     transition:transform 0.05s linear;
+
+    touch-action:none;
+    user-select:none;
 }
 
 /* IMAGES */
@@ -588,37 +592,37 @@ html,body{
     }
 
     .rotateBox{
-        width:260px;
-        height:260px;
+        width:240px;
+        height:240px;
     }
 
     .cakeImg{
-        width:260px;
-        height:260px;
+        width:240px;
+        height:240px;
     }
 
     .front{
-        transform:translateZ(130px);
+        transform:translateZ(120px);
     }
 
     .back{
-        transform:rotateY(180deg) translateZ(130px);
+        transform:rotateY(180deg) translateZ(120px);
     }
 
     .left{
-        transform:rotateY(-90deg) translateZ(130px);
+        transform:rotateY(-90deg) translateZ(120px);
     }
 
     .right{
-        transform:rotateY(90deg) translateZ(130px);
+        transform:rotateY(90deg) translateZ(120px);
     }
 
     .top{
-        transform:rotateX(90deg) translateZ(130px);
+        transform:rotateX(90deg) translateZ(120px);
     }
 
     .bottom{
-        transform:rotateX(-90deg) translateZ(130px);
+        transform:rotateX(-90deg) translateZ(120px);
     }
 
     .memoryBtn{
@@ -660,13 +664,9 @@ html,body{
 
 <body>
 
-<!-- MUSIC -->
-
 <audio id="music" loop>
     <source src="123.mp3" type="audio/mp3">
 </audio>
-
-<!-- PAGE 1 -->
 
 <div class="page" id="page1">
 
@@ -678,8 +678,6 @@ html,body{
     </div>
 
 </div>
-
-<!-- PAGE 2 -->
 
 <div class="page" id="page2">
 
@@ -697,8 +695,6 @@ html,body{
     </div>
 
 </div>
-
-<!-- PAGE 3 -->
 
 <div class="page" id="page3">
 
@@ -742,8 +738,6 @@ html,body{
     </button>
 
 </div>
-
-<!-- PAGE 4 -->
 
 <div class="page" id="page4">
 
@@ -797,31 +791,9 @@ html,body{
             <div class="overlay">Standing out like the prettiest flower 🍃✨</div>
         </div>
 
-        <div class="card">
-            <img src="17.jpeg">
-            <div class="overlay">Your simplicity makes your beauty unforgettable 🤎</div>
-        </div>
-
-        <div class="card">
-            <img src="21.jpeg">
-            <div class="overlay">Your smile feels like peace in human form ✨</div>
-        </div>
-
-        <div class="card">
-            <img src="22.jpeg">
-            <div class="overlay">You look like a beautiful blessing 🌸</div>
-        </div>
-
-        <div class="card">
-            <img src="4.png">
-            <div class="overlay">Sitting beside you feels like home ❤️</div>
-        </div>
-
     </div>
 
 </div>
-
-<!-- PAGE 5 -->
 
 <div class="page" id="page5">
 
@@ -941,37 +913,86 @@ const box = document.getElementById("rotateBox");
 let rotateX = -15;
 let rotateY = 25;
 
-let dragging = false;
+let isDragging = false;
+
+let previousX = 0;
+let previousY = 0;
 
 box.style.transform =
 `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
-box.addEventListener("mousedown",()=>{
+/* DESKTOP */
 
-    dragging = true;
+box.addEventListener("mousedown",(e)=>{
+
+    isDragging = true;
+
+    previousX = e.clientX;
+    previousY = e.clientY;
 
     box.style.cursor = "grabbing";
 });
 
 document.addEventListener("mouseup",()=>{
 
-    dragging = false;
+    isDragging = false;
 
     box.style.cursor = "grab";
 });
 
 document.addEventListener("mousemove",(e)=>{
 
-    if(!dragging) return;
+    if(!isDragging) return;
 
-    rotateY += e.movementX * 0.7;
+    let deltaX = e.clientX - previousX;
+    let deltaY = e.clientY - previousY;
 
-    rotateX -= e.movementY * 0.7;
+    rotateY += deltaX * 0.7;
+    rotateX -= deltaY * 0.7;
 
     box.style.transform =
-    `rotateX(${rotateX}deg)
-     rotateY(${rotateY}deg)`;
+    `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+    previousX = e.clientX;
+    previousY = e.clientY;
 });
+
+/* MOBILE TOUCH */
+
+box.addEventListener("touchstart",(e)=>{
+
+    isDragging = true;
+
+    previousX = e.touches[0].clientX;
+    previousY = e.touches[0].clientY;
+
+},{ passive:true });
+
+document.addEventListener("touchend",()=>{
+
+    isDragging = false;
+});
+
+document.addEventListener("touchmove",(e)=>{
+
+    if(!isDragging) return;
+
+    let currentX = e.touches[0].clientX;
+    let currentY = e.touches[0].clientY;
+
+    let deltaX = currentX - previousX;
+    let deltaY = currentY - previousY;
+
+    rotateY += deltaX * 0.7;
+    rotateX -= deltaY * 0.7;
+
+    box.style.transform =
+    `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+    previousX = currentX;
+    previousY = currentY;
+
+},{ passive:true });
 
 </script>
 
