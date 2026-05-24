@@ -914,22 +914,29 @@ const box = document.getElementById("rotateBox");
 let rotateX = -15;
 let rotateY = 25;
 
+let startX = 0;
+let startY = 0;
+
 let isDragging = false;
 
-let previousX = 0;
-let previousY = 0;
+/* INITIAL POSITION */
 
-box.style.transform =
-`rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+function updateCube(){
 
-/* DESKTOP */
+    box.style.transform =
+    `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+}
+
+updateCube();
+
+/* DESKTOP DRAG */
 
 box.addEventListener("mousedown",(e)=>{
 
     isDragging = true;
 
-    previousX = e.clientX;
-    previousY = e.clientY;
+    startX = e.clientX;
+    startY = e.clientY;
 
     box.style.cursor = "grabbing";
 });
@@ -945,17 +952,16 @@ document.addEventListener("mousemove",(e)=>{
 
     if(!isDragging) return;
 
-    let deltaX = e.clientX - previousX;
-    let deltaY = e.clientY - previousY;
+    let dx = e.clientX - startX;
+    let dy = e.clientY - startY;
 
-    rotateY += deltaX * 0.7;
-    rotateX -= deltaY * 0.7;
+    rotateY += dx * 0.8;
+    rotateX -= dy * 0.8;
 
-    box.style.transform =
-    `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    updateCube();
 
-    previousX = e.clientX;
-    previousY = e.clientY;
+    startX = e.clientX;
+    startY = e.clientY;
 });
 
 /* MOBILE TOUCH */
@@ -964,10 +970,12 @@ box.addEventListener("touchstart",(e)=>{
 
     isDragging = true;
 
-    previousX = e.touches[0].clientX;
-    previousY = e.touches[0].clientY;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
 
-},{ passive:true });
+    e.preventDefault();
+
+},{ passive:false });
 
 document.addEventListener("touchend",()=>{
 
@@ -978,22 +986,22 @@ document.addEventListener("touchmove",(e)=>{
 
     if(!isDragging) return;
 
-    let currentX = e.touches[0].clientX;
-    let currentY = e.touches[0].clientY;
+    let touch = e.touches[0];
 
-    let deltaX = currentX - previousX;
-    let deltaY = currentY - previousY;
+    let dx = touch.clientX - startX;
+    let dy = touch.clientY - startY;
 
-    rotateY += deltaX * 0.7;
-    rotateX -= deltaY * 0.7;
+    rotateY += dx * 0.8;
+    rotateX -= dy * 0.8;
 
-    box.style.transform =
-    `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    updateCube();
 
-    previousX = currentX;
-    previousY = currentY;
+    startX = touch.clientX;
+    startY = touch.clientY;
 
-},{ passive:true });
+    e.preventDefault();
+
+},{ passive:false });
 
 </script>
 
