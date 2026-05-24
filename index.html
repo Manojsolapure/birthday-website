@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Happy Birthday Aurelia</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Baloo 2', cursive;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:black;
+}
+
+/* FLOATING SYMBOLS */
+
+.float{
+    position:absolute;
+    animation:floatUp linear infinite;
+    opacity:0.8;
+    z-index:0;
+}
+
+@keyframes floatUp{
+
+    0%{
+        transform:translateY(100vh) rotate(0deg);
+        opacity:0;
+    }
+
+    100%{
+        transform:translateY(-120vh) rotate(360deg);
+        opacity:1;
+    }
+}
+
+/* COMMON PAGE */
+
+.page{
+    width:100%;
+    height:100vh;
+    position:absolute;
+    top:0;
+    left:0;
+    overflow:hidden;
+}
+
+/* PAGE 1 */
+
+#page1{
+    background:black;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+
+.count{
+    font-size:220px;
+    color:white;
+    font-weight:bold;
+
+    text-shadow:
+    0 0 20px #ff66c4,
+    0 0 50px #b266ff,
+    0 0 100px #ff99cc;
+
+    animation:zoom 1s infinite alternate;
+    z-index:2;
+}
+
+.birthday{
+    display:none;
+    text-align:center;
+    z-index:2;
+}
+
+.birthday h1{
+    font-size:90px;
+    color:#ff7eb8;
+}
+
+.birthday h2{
+    font-size:100px;
+    color:#b784ff;
+}
+
+/* PAGE 2 */
+
+#page2{
+    display:none;
+    background:linear-gradient(to bottom,#fff0f6,#f5e9ff);
+}
+
+.giftHeading{
+    text-align:center;
+    margin-top:25px;
+    z-index:2;
+    position:relative;
+}
+
+.giftHeading h1{
+    font-size:68px;
+    color:#e75480;
+}
+
+.giftHeading p{
+    font-size:34px;
+    color:#8c52ff;
+}
+
+.giftBox{
+    width:340px;
+    height:340px;
+
+    background:linear-gradient(45deg,#c79cff,#ff9acb);
+
+    margin:70px auto;
+
+    border-radius:35px;
+
+    position:relative;
+
+    cursor:pointer;
+
+    box-shadow:
+    0 0 40px #d8a6ff,
+    0 0 90px #ffb3d9;
+
+    animation:floatGift 2s infinite alternate;
+}
+
+.giftBox:hover{
+    transform:scale(1.05);
+}
+
+.ribbonV{
+    position:absolute;
+    width:70px;
+    height:100%;
+    background:#ffbfd9;
+    left:50%;
+    transform:translateX(-50%);
+}
+
+.ribbonH{
+    position:absolute;
+    width:100%;
+    height:70px;
+    background:#ffbfd9;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+.bow{
+    position:absolute;
+    top:-65px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:120px;
+}
+
+/* PAGE 3 */
+
+#page3{
+    display:none;
+    background:linear-gradient(to bottom,#f7efff,#fff3f8);
+}
+
+/* TITLE */
+
+.cakeTitle{
+    position:absolute;
+    top:20px;
+    left:40px;
+
+    font-size:65px;
+    color:#7e4dff;
+
+    z-index:3;
+}
+
+/* MESSAGE BOX */
+
+.msg{
+    width:300px;
+
+    background:rgba(255,255,255,0.95);
+
+    border:4px solid #e0c7ff;
+
+    border-radius:28px;
+
+    padding:28px;
+
+    position:absolute;
+
+    text-align:center;
+
+    font-size:27px;
+    font-weight:bold;
+
+    color:#5b4377;
+
+    line-height:1.5;
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,0.15);
+
+    transition:0.4s;
+
+    z-index:2;
+}
+
+.msg:hover{
+    transform:scale(1.08);
+}
+
+.msg1{
+    left:45px;
+    top:180px;
+}
+
+.msg2{
+    left:45px;
+    top:480px;
+}
+
+.msg3{
+    right:45px;
+    top:180px;
+}
+
+.msg4{
+    right:45px;
+    top:480px;
+}
+
+/* 3D CUBE */
+
+.cakeArea{
+    position:absolute;
+
+    left:50%;
+    top:58%;
+
+    transform:translate(-50%,-50%);
+
+    perspective:1600px;
+
+    z-index:2;
+}
+
+.rotateBox{
+
+    width:260px;
+    height:260px;
+
+    position:relative;
+
+    transform-style:preserve-3d;
+
+    cursor:grab;
+
+    transition:transform 0.05s linear;
+}
+
+/* IMAGES */
+
+.cakeImg{
+
+    position:absolute;
+
+    width:260px;
+    height:260px;
+
+    object-fit:cover;
+
+    border-radius:25px;
+
+    box-shadow:
+    0 25px 45px rgba(0,0,0,0.35);
+
+    backface-visibility:hidden;
+}
+
+/* 6 SIDES */
+
+.front{
+    transform:translateZ(130px);
+}
+
+.back{
+    transform:
+    rotateY(180deg)
+    translateZ(130px);
+}
+
+.left{
+    transform:
+    rotateY(-90deg)
+    translateZ(130px);
+}
+
+.right{
+    transform:
+    rotateY(90deg)
+    translateZ(130px);
+}
+
+.top{
+    transform:
+    rotateX(90deg)
+    translateZ(130px);
+}
+
+.bottom{
+    transform:
+    rotateX(-90deg)
+    translateZ(130px);
+}
+
+/* BUTTON */
+
+.memoryBtn{
+    position:absolute;
+    right:40px;
+    bottom:30px;
+
+    padding:16px 38px;
+
+    border:none;
+    border-radius:50px;
+
+    background:linear-gradient(45deg,#ff8dc8,#be8cff);
+
+    color:white;
+
+    font-size:28px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    box-shadow:
+    0 0 20px #ff9fd2,
+    0 0 40px #c18cff;
+
+    z-index:3;
+}
+
+/* PAGE 4 */
+
+#page4{
+    display:none;
+    background:linear-gradient(to bottom,#fff0f7,#f4ebff);
+    overflow-y:auto;
+    padding:30px;
+}
+
+.memoryHeading{
+    text-align:center;
+    font-size:70px;
+    color:#d94f95;
+}
+
+.lastGift{
+    position:absolute;
+    top:25px;
+    right:40px;
+
+    padding:14px 30px;
+
+    border:none;
+    border-radius:40px;
+
+    background:linear-gradient(45deg,#ff8dc8,#b784ff);
+
+    color:white;
+
+    font-size:24px;
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+.gallery{
+    margin-top:80px;
+
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:30px;
+}
+
+.card{
+    height:240px;
+
+    border-radius:25px;
+
+    overflow:hidden;
+
+    position:relative;
+
+    cursor:pointer;
+
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+.card img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:0.5s;
+}
+
+.overlay{
+    position:absolute;
+    inset:0;
+
+    background:rgba(0,0,0,0.65);
+
+    color:white;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+
+    padding:20px;
+
+    opacity:0;
+
+    transition:0.5s;
+
+    font-size:22px;
+    font-weight:bold;
+}
+
+.card:hover img{
+    transform:scale(1.15);
+}
+
+.card:hover .overlay{
+    opacity:1;
+}
+
+/* PAGE 5 */
+
+#page5{
+    display:none;
+    background:black;
+    justify-content:center;
+    align-items:center;
+}
+
+.finalLetter{
+    width:70%;
+    padding:50px;
+
+    background:rgba(255,255,255,0.1);
+
+    border:3px solid pink;
+
+    border-radius:35px;
+
+    color:white;
+
+    text-align:center;
+
+    font-size:35px;
+    line-height:1.8;
+
+    backdrop-filter:blur(10px);
+
+    box-shadow:
+    0 0 30px pink,
+    0 0 60px #b784ff;
+
+    animation:glow 2s infinite alternate;
+}
+
+/* ANIMATION */
+
+@keyframes zoom{
+    from{ transform:scale(0.8); }
+    to{ transform:scale(1.1); }
+}
+
+@keyframes floatGift{
+    from{ transform:translateY(0px); }
+    to{ transform:translateY(-18px); }
+}
+
+@keyframes glow{
+    from{
+        box-shadow:0 0 20px pink;
+    }
+
+    to{
+        box-shadow:
+        0 0 40px pink,
+        0 0 80px #b784ff;
+    }
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+    body{
+        overflow:auto;
+    }
+
+    .page{
+        overflow:auto;
+        min-height:100vh;
+    }
+
+    .count{
+        font-size:120px;
+    }
+
+    .birthday h1{
+        font-size:42px;
+    }
+
+    .birthday h2{
+        font-size:55px;
+    }
+
+    .giftHeading h1{
+        font-size:38px;
+        padding:10px;
+    }
+
+    .giftHeading p{
+        font-size:22px;
+    }
+
+    .giftBox{
+        width:230px;
+        height:230px;
+    }
+
+    .bow{
+        font-size:80px;
+        top:-45px;
+    }
+
+    .cakeTitle{
+        position:relative;
+        left:0;
+        top:20px;
+        text-align:center;
+        font-size:38px;
+    }
+
+    .msg{
+        position:relative;
+        width:85%;
+        margin:20px auto;
+        left:0;
+        right:0;
+        top:0;
+        font-size:20px;
+    }
+
+    .cakeArea{
+        position:relative;
+        top:0;
+        left:0;
+        transform:none;
+        margin-top:40px;
+        display:flex;
+        justify-content:center;
+    }
+
+    .rotateBox{
+        width:260px;
+        height:260px;
+    }
+
+    .cakeImg{
+        width:260px;
+        height:260px;
+    }
+
+    .front{
+        transform:translateZ(130px);
+    }
+
+    .back{
+        transform:rotateY(180deg) translateZ(130px);
+    }
+
+    .left{
+        transform:rotateY(-90deg) translateZ(130px);
+    }
+
+    .right{
+        transform:rotateY(90deg) translateZ(130px);
+    }
+
+    .top{
+        transform:rotateX(90deg) translateZ(130px);
+    }
+
+    .bottom{
+        transform:rotateX(-90deg) translateZ(130px);
+    }
+
+    .memoryBtn{
+        position:relative;
+        display:block;
+        margin:40px auto;
+        right:0;
+        bottom:0;
+        font-size:22px;
+    }
+
+    .gallery{
+        grid-template-columns:1fr;
+    }
+
+    .memoryHeading{
+        font-size:42px;
+        margin-top:50px;
+    }
+
+    .lastGift{
+        position:relative;
+        display:block;
+        margin:20px auto;
+        top:0;
+        right:0;
+    }
+
+    .finalLetter{
+        width:92%;
+        font-size:22px;
+        padding:25px;
+        margin:30px auto;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- MUSIC -->
+
+<audio id="music" loop>
+    <source src="123.mp3" type="audio/mp3">
+</audio>
+
+<!-- PAGE 1 -->
+
+<div class="page" id="page1">
+
+    <div class="count" id="count">9</div>
+
+    <div class="birthday" id="birthday">
+        <h1>🎉 HAPPY BIRTHDAY 🎉</h1>
+        <h2>AURELIA 💖</h2>
+    </div>
+
+</div>
+
+<!-- PAGE 2 -->
+
+<div class="page" id="page2">
+
+    <div class="giftHeading">
+        <h1>💖 Click to open your presents! 💖</h1>
+        <p>Hope you like them hehe 💕</p>
+    </div>
+
+    <div class="giftBox" id="giftOpen">
+
+        <div class="ribbonV"></div>
+        <div class="ribbonH"></div>
+        <div class="bow">🎀</div>
+
+    </div>
+
+</div>
+
+<!-- PAGE 3 -->
+
+<div class="page" id="page3">
+
+    <div class="cakeTitle">
+        💜 Your Birthday Cake 🍫
+    </div>
+
+    <div class="msg msg1">
+        💖 You are the sweetest part of every moment in life
+    </div>
+
+    <div class="msg msg2">
+        💜 Every smile of yours makes my world brighter
+    </div>
+
+    <div class="msg msg3">
+        💕 Forever grateful to have someone as special as you
+    </div>
+
+    <div class="msg msg4">
+        🌷 Your happiness means more than anything to me
+    </div>
+
+    <div class="cakeArea">
+
+        <div class="rotateBox" id="rotateBox">
+
+            <img src="1.jpeg" class="cakeImg front">
+            <img src="2.jpeg" class="cakeImg back">
+            <img src="4.png" class="cakeImg left">
+            <img src="11.jpeg" class="cakeImg right">
+            <img src="18.jpeg" class="cakeImg top">
+            <img src="19.jpeg" class="cakeImg bottom">
+
+        </div>
+
+    </div>
+
+    <button class="memoryBtn" id="memoryBtn">
+        Click Here 💕
+    </button>
+
+</div>
+
+<!-- PAGE 4 -->
+
+<div class="page" id="page4">
+
+    <h1 class="memoryHeading">
+        💖 Moments In Time 💖
+    </h1>
+
+    <button class="lastGift" id="lastGift">
+        Open Last Gift 🎁
+    </button>
+
+    <div class="gallery">
+
+        <div class="card">
+            <img src="18.jpeg">
+            <div class="overlay">Tiny hands, innocent smile, and a heart full of pure happiness 🥺💕</div>
+        </div>
+
+        <div class="card">
+            <img src="11.jpeg">
+            <div class="overlay">Watching you grow from a cute little soul to this beautiful person 🌸</div>
+        </div>
+
+        <div class="card">
+            <img src="12.jpeg">
+            <div class="overlay">Your smile makes every moment magical 💕</div>
+        </div>
+
+        <div class="card">
+            <img src="14.jpeg">
+            <div class="overlay">Wrapped in blue elegance, you shine beautifully 💙✨</div>
+        </div>
+
+        <div class="card">
+            <img src="15.jpeg">
+            <div class="overlay">Grace and confidence follow you everywhere 💫</div>
+        </div>
+
+        <div class="card">
+            <img src="13.jpeg">
+            <div class="overlay">Every candid moment of yours feels magical 🌿</div>
+        </div>
+
+        <div class="card">
+            <img src="16.jpeg">
+            <div class="overlay">You glow naturally wherever you go ☀️🤍</div>
+        </div>
+
+        <div class="card">
+            <img src="19.jpeg">
+            <div class="overlay">Standing out like the prettiest flower 🍃✨</div>
+        </div>
+
+        <div class="card">
+            <img src="17.jpeg">
+            <div class="overlay">Your simplicity makes your beauty unforgettable 🤎</div>
+        </div>
+
+        <div class="card">
+            <img src="21.jpeg">
+            <div class="overlay">Your smile feels like peace in human form ✨</div>
+        </div>
+
+        <div class="card">
+            <img src="22.jpeg">
+            <div class="overlay">You look like a beautiful blessing 🌸</div>
+        </div>
+
+        <div class="card">
+            <img src="4.png">
+            <div class="overlay">Sitting beside you feels like home ❤️</div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- PAGE 5 -->
+
+<div class="page" id="page5">
+
+    <div class="finalLetter">
+
+        💖 MY WRITTEN LETTER 💖
+        <br><br>
+
+        Happy Birthday Aurelia🫶🏻💞🥰😘✨
+        <br><br>
+
+        Thank you for bringing happiness, smiles, and beautiful memories into life.
+        Every moment with you feels magical and unforgettable.
+        May your birthday be filled with love, joy, laughter, and endless happiness.
+        You truly deserve the best today and always 💕
+
+    </div>
+
+</div>
+
+<script>
+
+/* MUSIC */
+
+const music = document.getElementById("music");
+
+document.addEventListener("click",()=>{
+
+    music.play();
+
+},{once:true});
+
+music.volume = 0.6;
+
+/* COUNTDOWN */
+
+let number = 9;
+
+const count = document.getElementById("count");
+const birthday = document.getElementById("birthday");
+
+const timer = setInterval(()=>{
+
+    number--;
+
+    if(number > 0){
+
+        count.innerHTML = number;
+
+    }else{
+
+        clearInterval(timer);
+
+        count.style.display = "none";
+
+        birthday.style.display = "block";
+
+        setTimeout(()=>{
+
+            document.getElementById("page1").style.display = "none";
+            document.getElementById("page2").style.display = "block";
+
+        },3000);
+    }
+
+},1000);
+
+/* PAGE SWITCH */
+
+document.getElementById("giftOpen").onclick = ()=>{
+
+    document.getElementById("page2").style.display = "none";
+    document.getElementById("page3").style.display = "block";
+};
+
+document.getElementById("memoryBtn").onclick = ()=>{
+
+    document.getElementById("page3").style.display = "none";
+    document.getElementById("page4").style.display = "block";
+};
+
+document.getElementById("lastGift").onclick = ()=>{
+
+    document.getElementById("page4").style.display = "none";
+    document.getElementById("page5").style.display = "flex";
+};
+
+/* FLOATING SYMBOLS */
+
+const symbols = ["🥳","💖","💕","🌷"];
+
+for(let i=0;i<250;i++){
+
+    let float = document.createElement("div");
+
+    float.classList.add("float");
+
+    float.innerHTML =
+    symbols[Math.floor(Math.random()*symbols.length)];
+
+    float.style.left =
+    Math.random()*100 + "vw";
+
+    float.style.fontSize =
+    (25 + Math.random()*35) + "px";
+
+    float.style.animationDuration =
+    (5 + Math.random()*8) + "s";
+
+    document.body.appendChild(float);
+}
+
+/* 3D CUBE */
+
+const box = document.getElementById("rotateBox");
+
+let rotateX = -15;
+let rotateY = 25;
+
+let dragging = false;
+
+box.style.transform =
+`rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+box.addEventListener("mousedown",()=>{
+
+    dragging = true;
+
+    box.style.cursor = "grabbing";
+});
+
+document.addEventListener("mouseup",()=>{
+
+    dragging = false;
+
+    box.style.cursor = "grab";
+});
+
+document.addEventListener("mousemove",(e)=>{
+
+    if(!dragging) return;
+
+    rotateY += e.movementX * 0.7;
+
+    rotateX -= e.movementY * 0.7;
+
+    box.style.transform =
+    `rotateX(${rotateX}deg)
+     rotateY(${rotateY}deg)`;
+});
+
+</script>
+
+</body>
+</html>
