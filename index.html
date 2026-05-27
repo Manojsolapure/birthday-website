@@ -20,7 +20,7 @@
 html,body{
     width:100%;
     height:100%;
-    overflow:hidden;
+    overflow-x:hidden;
     background:black;
 }
 
@@ -31,7 +31,6 @@ html,body{
     animation:floatUp linear infinite;
     opacity:0.8;
     z-index:0;
-    pointer-events:none;
 }
 
 @keyframes floatUp{
@@ -46,6 +45,18 @@ html,body{
         opacity:1;
     }
 }
+@keyframes fall{
+
+    0%{
+        transform:translateY(-100px) rotate(0deg);
+        opacity:1;
+    }
+
+    100%{
+        transform:translateY(110vh) rotate(360deg);
+        opacity:0;
+    }
+}
 
 /* COMMON PAGE */
 
@@ -55,7 +66,7 @@ html,body{
     position:absolute;
     top:0;
     left:0;
-    overflow:visible;
+    overflow:hidden;
 }
 
 /* PAGE 1 */
@@ -276,10 +287,6 @@ html,body{
     cursor:grab;
 
     transition:transform 0.05s linear;
-
-    touch-action:none;
-    user-select:none;
-    will-change:transform;
 }
 
 /* IMAGES */
@@ -298,7 +305,7 @@ html,body{
     box-shadow:
     0 25px 45px rgba(0,0,0,0.35);
 
-    backface-visibility: visible;
+    backface-visibility:hidden;
 }
 
 /* 6 SIDES */
@@ -471,6 +478,7 @@ html,body{
 }
 
 .finalLetter{
+
     width:70%;
     padding:50px;
 
@@ -482,10 +490,13 @@ html,body{
 
     color:white;
 
-    text-align:center;
+    text-align:justify;
 
-    font-size:35px;
-    line-height:1.8;
+    font-size:30px;
+
+    line-height:1.9;
+
+    letter-spacing:1px;
 
     backdrop-filter:blur(10px);
 
@@ -494,6 +505,8 @@ html,body{
     0 0 60px #b784ff;
 
     animation:glow 2s infinite alternate;
+
+    overflow-y:auto;
 }
 
 /* ANIMATION */
@@ -593,37 +606,37 @@ html,body{
     }
 
     .rotateBox{
-        width:240px;
-        height:240px;
+        width:260px;
+        height:260px;
     }
 
     .cakeImg{
-        width:240px;
-        height:240px;
+        width:260px;
+        height:260px;
     }
 
     .front{
-        transform:translateZ(120px);
+        transform:translateZ(130px);
     }
 
     .back{
-        transform:rotateY(180deg) translateZ(120px);
+        transform:rotateY(180deg) translateZ(130px);
     }
 
     .left{
-        transform:rotateY(-90deg) translateZ(120px);
+        transform:rotateY(-90deg) translateZ(130px);
     }
 
     .right{
-        transform:rotateY(90deg) translateZ(120px);
+        transform:rotateY(90deg) translateZ(130px);
     }
 
     .top{
-        transform:rotateX(90deg) translateZ(120px);
+        transform:rotateX(90deg) translateZ(130px);
     }
 
     .bottom{
-        transform:rotateX(-90deg) translateZ(120px);
+        transform:rotateX(-90deg) translateZ(130px);
     }
 
     .memoryBtn{
@@ -665,9 +678,13 @@ html,body{
 
 <body>
 
+<!-- MUSIC -->
+
 <audio id="music" loop>
     <source src="123.mp3" type="audio/mp3">
 </audio>
+
+<!-- PAGE 1 -->
 
 <div class="page" id="page1">
 
@@ -679,6 +696,8 @@ html,body{
     </div>
 
 </div>
+
+<!-- PAGE 2 -->
 
 <div class="page" id="page2">
 
@@ -696,6 +715,8 @@ html,body{
     </div>
 
 </div>
+
+<!-- PAGE 3 -->
 
 <div class="page" id="page3">
 
@@ -739,6 +760,8 @@ html,body{
     </button>
 
 </div>
+
+<!-- PAGE 4 -->
 
 <div class="page" id="page4">
 
@@ -791,7 +814,7 @@ html,body{
             <img src="19.jpeg">
             <div class="overlay">Standing out like the prettiest flower 🍃✨</div>
         </div>
-        
+
         <div class="card">
             <img src="17.jpeg">
             <div class="overlay">Your simplicity makes your beauty unforgettable 🤎</div>
@@ -812,31 +835,19 @@ html,body{
             <div class="overlay">Sitting beside you feels like home ❤️</div>
         </div>
 
-       
-
     </div>
 
 </div>
+
+<!-- PAGE 5 -->
 
 <div class="page" id="page5">
 
     <div class="finalLetter">
-
-        💖 MY WRITTEN LETTER 💖
-        <br><br>
-
-        Happy Birthday Aurelia🫶🏻💞🥰😘✨
-        <br><br>
-
-        Thank you for bringing happiness, smiles, and beautiful memories into life.
-        Every moment with you feels magical and unforgettable.
-        May your birthday be filled with love, joy, laughter, and endless happiness.
-        You truly deserve the best today and always 💕
-
+        <div id="liveLetter"></div>
     </div>
 
 </div>
-
 <script>
 
 /* MUSIC */
@@ -902,6 +913,7 @@ document.getElementById("lastGift").onclick = ()=>{
 
     document.getElementById("page4").style.display = "none";
     document.getElementById("page5").style.display = "flex";
+    startTypingLetter();
 };
 
 /* FLOATING SYMBOLS */
@@ -936,96 +948,156 @@ const box = document.getElementById("rotateBox");
 let rotateX = -15;
 let rotateY = 25;
 
-let startX = 0;
-let startY = 0;
+let dragging = false;
 
-let isDragging = false;
+box.style.transform =
+`rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
-/* INITIAL POSITION */
+box.addEventListener("mousedown",()=>{
 
-function updateCube(){
-
-    box.style.transform =
-    `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-}
-
-updateCube();
-
-/* DESKTOP DRAG */
-
-box.addEventListener("mousedown",(e)=>{
-
-    isDragging = true;
-
-    startX = e.clientX;
-    startY = e.clientY;
+    dragging = true;
 
     box.style.cursor = "grabbing";
 });
 
 document.addEventListener("mouseup",()=>{
 
-    isDragging = false;
+    dragging = false;
 
     box.style.cursor = "grab";
 });
 
 document.addEventListener("mousemove",(e)=>{
 
-    if(!isDragging) return;
+    if(!dragging) return;
 
-    let dx = e.clientX - startX;
-    let dy = e.clientY - startY;
+    rotateY += e.movementX * 0.7;
 
-    rotateY += dx * 0.8;
-    rotateX -= dy * 0.8;
+    rotateX -= e.movementY * 0.7;
 
-    updateCube();
-
-    startX = e.clientX;
-    startY = e.clientY;
+    box.style.transform =
+    `rotateX(${rotateX}deg)
+     rotateY(${rotateY}deg)`;
 });
+function startTypingLetter(){
 
-/* MOBILE TOUCH */
+    confetti({
+        particleCount: 250,
+        spread: 150,
+        origin:{ y:0.6 }
+    });
 
-box.addEventListener("touchstart",(e)=>{
+    createLoveRain();
 
-    isDragging = true;
+    const text = `💖 Happy Birthday Keerthie 💖🌙
 
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
+Firstly, why you for me?
+Because you are too caring 💕
+Even though you are the opposite of me,
+the way you treat me...
+uff, I have no words 😮‍💨
+With me, you have been beyond special 🌟
+You are younger than me in age,
+but you have so much wisdom about life 🧠
+I truly admire your food routine 🍱
+and daily discipline ⏰
+You could guide anyone so effortlessly 🧘‍♀️
+You are not just someone I love,
+you are my guide too 🧭
+I know how innocent you are 🪬
+and how truthfully you take care of me ❤️
+I am loving you more every day 💞
+Whatever comes and goes,
+I want you to stay with me forever ♾️
+Like the moon shining in the sky,
+you are the bright light of my future 🌙✨
+I am so excited to meet you soon ☁️
+But continue your education
+and build your career 😊
+Your success is the key
+to our beautiful future together 💫
+We should spend more time together 🤝
+build dreams together 🏠
+and grow together 🌱
+And yes...
+I love you not only for your beauty 😍
+but also for your talking style 🎤
+When you call me “Manu”
+I feel peace and happiness ✨
+Your care, your attention,
+your little efforts...
+I notice everything 🫶
+You once said you expect
+trust and loyalty 💯
+I promise I will prove it forever 🔐
+I don’t want to lose you, ever 😞
+Like Veer waited for Zaara,
+I too feel the same pure connection 🤍
+You are the reason
+my today feels beautiful
+and my tomorrow has meaning 💓💫
+Please stay with me forever ☹️🙏
+I adore you, Aurelia 💫💓
+Once again,
+Happiest Birthday
+to the queen of my heart 👑🎂
+— Your loving Manu 💗
+Lvs u 👥❣️🤝🌏`;
+    let i = 0;
 
-    e.preventDefault();
+    const liveLetter = document.getElementById("liveLetter");
+    liveLetter.innerHTML = "";
+    function typing(){
+        if(i < text.length){
+            liveLetter.innerHTML +=
+            text.charAt(i) === "\n"
+            ? "<br>"
+            : text.charAt(i);
+            i++;
+            setTimeout(typing, 18 + Math.random()*35);
+        }
+    }
 
-},{ passive:false });
+    typing();
+}
 
-document.addEventListener("touchend",()=>{
+/* LOVE RAIN EFFECT */
 
-    isDragging = false;
-});
+function createLoveRain(){
 
-document.addEventListener("touchmove",(e)=>{
+    const symbols = ["💖","💕","🌸","✨","🩷"];
 
-    if(!isDragging) return;
+    for(let i=0;i<120;i++){
 
-    let touch = e.touches[0];
+        let drop = document.createElement("div");
 
-    let dx = touch.clientX - startX;
-    let dy = touch.clientY - startY;
+        drop.innerHTML =
+        symbols[Math.floor(Math.random()*symbols.length)];
 
-    rotateY += dx * 0.8;
-    rotateX -= dy * 0.8;
+        drop.style.position = "fixed";
 
-    updateCube();
+        drop.style.left =
+        Math.random()*100 + "vw";
 
-    startX = touch.clientX;
-    startY = touch.clientY;
+        drop.style.top = "-50px";
 
-    e.preventDefault();
+        drop.style.fontSize =
+        (20 + Math.random()*25) + "px";
 
-},{ passive:false });
+        drop.style.zIndex = "9999";
+
+        drop.style.pointerEvents = "none";
+
+        drop.style.animation =
+        `fall ${4 + Math.random()*4}s linear infinite`;
+
+        document.body.appendChild(drop);
+    }
+}
+
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 </body>
 </html>
