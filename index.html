@@ -943,6 +943,8 @@ for(let i=0;i<250;i++){
 
 /* 3D CUBE */
 
+/* 3D CUBE */
+
 const box = document.getElementById("rotateBox");
 
 let rotateX = -15;
@@ -950,12 +952,20 @@ let rotateY = 25;
 
 let dragging = false;
 
+let lastX = 0;
+let lastY = 0;
+
 box.style.transform =
 `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
-box.addEventListener("mousedown",()=>{
+/* DESKTOP */
+
+box.addEventListener("mousedown",(e)=>{
 
     dragging = true;
+
+    lastX = e.clientX;
+    lastY = e.clientY;
 
     box.style.cursor = "grabbing";
 });
@@ -971,14 +981,54 @@ document.addEventListener("mousemove",(e)=>{
 
     if(!dragging) return;
 
-    rotateY += e.movementX * 0.7;
+    let deltaX = e.clientX - lastX;
+    let deltaY = e.clientY - lastY;
 
-    rotateX -= e.movementY * 0.7;
+    rotateY += deltaX * 0.7;
+    rotateX -= deltaY * 0.7;
 
     box.style.transform =
-    `rotateX(${rotateX}deg)
-     rotateY(${rotateY}deg)`;
+    `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+    lastX = e.clientX;
+    lastY = e.clientY;
 });
+
+/* MOBILE TOUCH */
+
+box.addEventListener("touchstart",(e)=>{
+
+    dragging = true;
+
+    lastX = e.touches[0].clientX;
+    lastY = e.touches[0].clientY;
+
+},{passive:true});
+
+document.addEventListener("touchend",()=>{
+
+    dragging = false;
+});
+
+document.addEventListener("touchmove",(e)=>{
+
+    if(!dragging) return;
+
+    let touch = e.touches[0];
+
+    let deltaX = touch.clientX - lastX;
+    let deltaY = touch.clientY - lastY;
+
+    rotateY += deltaX * 0.7;
+    rotateX -= deltaY * 0.7;
+
+    box.style.transform =
+    `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+    lastX = touch.clientX;
+    lastY = touch.clientY;
+
+},{passive:true});
 function startTypingLetter(){
 
     confetti({
